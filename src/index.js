@@ -3,11 +3,14 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import WalletConnectSessionProvider from './utils/WalletConnectSessionProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <WalletConnectSessionProvider>
+      <App />
+    </WalletConnectSessionProvider>
   </React.StrictMode>
 );
 

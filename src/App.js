@@ -1,23 +1,53 @@
-import logo from './logo.svg';
 import './App.css';
+import AbstractButton from './components/AbstractButton';
+import { useWalletConnect } from './utils/WalletConnectSessionProvider';
 
 function App() {
+
+  // get info about the current WalletConnect session
+  const walletConnectSession = useWalletConnect();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <div className='centered'>
+      <AbstractButton
+        color='#EEEEEE'
+        textColor='black'
+        onClick={
+          walletConnectSession.isConnected ?
+            () => {
+              // do something else if already connected
+            }
+            :
+            () => {
+              walletConnectSession.connect()
+            }
+        }
+      >
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          {
+            walletConnectSession.isConnected ?
+              'Connected'
+              :
+              'Authenticate with WalletConnect'
+          }
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <img
+          style={{
+            'height': '75%',
+            'borderRadius': '0.5rem',
+            'marginLeft': '1.5rem',
+            'marginRight': '-1.5rem'
+          }}
+          src='./sponsorAssets/walletconnect-square-white.svg'
+        />
+      </AbstractButton>
+      {
+        walletConnectSession.connector &&
+        walletConnectSession.connector.accounts &&
+        <p>
+          {walletConnectSession.connector.accounts[0]}
+        </p>
+      }
     </div>
   );
 }
