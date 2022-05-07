@@ -1,5 +1,6 @@
 import './App.css';
-import AbstractButton from './components/AbstractButton';
+import WCActivateButton from './components/WalletConnect Controls/WCActivateButton';
+import WCDisconnectButton from './components/WalletConnect Controls/WCDisconnectButton';
 import { useWalletConnect } from './utils/WalletConnectSessionProvider';
 
 function App() {
@@ -9,38 +10,11 @@ function App() {
 
   return (
     <div className='centered'>
-      <AbstractButton
-        color='#EEEEEE'
-        textColor='black'
-        onClick={
-          walletConnectSession.isConnected ?
-            () => {
-              // do something else if already connected
-            }
-            :
-            () => {
-              walletConnectSession.connect()
-            }
-        }
-      >
-        <p>
-          {
-            walletConnectSession.isConnected ?
-              'Connected'
-              :
-              'Authenticate with WalletConnect'
-          }
-        </p>
-        <img
-          style={{
-            'height': '75%',
-            'borderRadius': '0.5rem',
-            'marginLeft': '1.5rem',
-            'marginRight': '-1.5rem'
-          }}
-          src='./sponsorAssets/walletconnect-square-white.svg'
-        />
-      </AbstractButton>
+      <WCActivateButton />
+      {
+        walletConnectSession.isConnected &&
+        <WCDisconnectButton />
+      }
       {
         walletConnectSession.connector &&
         walletConnectSession.connector.accounts &&

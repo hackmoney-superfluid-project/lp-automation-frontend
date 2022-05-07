@@ -107,12 +107,25 @@ export default function WalletConnectSessionProvider(props) {
         setIsLoaded(false)
         const newConnector = await initWalletConnect() // we need to re-init the connector for the modal to show for a second time
         await newConnector.createSession();
+        //await connector.connect()
+        setIsLoaded(true)
+    }
+
+    async function disconnectWalletAndUpdateStatus() {
+
+        // return if not connected
+        if (!isConnected) { return }
+
+        setIsLoaded(false)
+        //const newConnector = await initWalletConnect() // we need to re-init the connector for the modal to show for a second time
+        await connector.killSession()
         setIsLoaded(true)
     }
 
     return (
         <WalletConnectContext.Provider value={{
             connect: connectWalletAndUpdateStatus,
+            disconnect: disconnectWalletAndUpdateStatus,
             accounts: accounts,
             chainId: chainId,
             connector: connector,
