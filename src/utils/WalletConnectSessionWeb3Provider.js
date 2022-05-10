@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext, createContext } from 'react'
-//import Web3 from 'web3'
-//import WalletConnectProvider from '@walletconnect/web3-provider'
-import WalletConnect from "@walletconnect/client";
-import QRCodeModal from "@walletconnect/qrcode-modal";
+import Web3 from 'web3'
+import WalletConnectProvider from '@walletconnect/web3-provider'
+//import WalletConnect from "@walletconnect/client";
+//import QRCodeModal from "@walletconnect/qrcode-modal";
 
 // create context
 const WalletConnectContext = createContext()
@@ -13,40 +13,40 @@ export function useWalletConnect() {
 }
 
 // this context provider allows the wallet address to be passed down the component tree
-export default function WalletConnectSessionProvider(props) {
+export default function WalletConnectSessionWeb3Provider(props) {
 
     // states for wallet session
     const [accounts, setAccounts] = useState()
     const [chainId, setChainId] = useState()
     const [isLoaded, setIsLoaded] = useState(false)
-    const [connector, setConnector] = useState()
+    const [provider, setProvider] = useState()
     const [isConnected, setIsConnected] = useState(false)
 
     // function to create a walletconnect connector
     async function initWalletConnect() {
 
-        const newConnector = new WalletConnect({
-            bridge: "https://bridge.walletconnect.org",
-            qrcodeModal: QRCodeModal,
+        const newProvider = new WalletConnectProvider({
+            infuraId: "627d53e500bf4f58839c5fd0588df224",
         })
 
-        setConnector(newConnector)
-        return newConnector
+        setProvider(newProvider)
+
+        return newProvider
     }
 
-    // assign connector on component mount
+    // assign provider on component mount
     useEffect(() => {
 
         async function setupWalletConnect() {
-            // Create a connector
-            const newConnector = await initWalletConnect()
+            // Create a provider
+            const newProvider = await initWalletConnect()
 
             // Check if already connected
-            setIsConnected(newConnector.connected)
+            setIsConnected(newProvider.connector.connected)
             
-            if (newConnector.connected) {
-                setAccounts(newConnector.accounts)
-                setChainId(newConnector.chainId)
+            if (newProvider.connector.connected) {
+                setAccounts(newProvider.connector.accounts)
+                setChainId(newProvider.connector.chainId)
             }
 
             setIsLoaded(true)
@@ -58,12 +58,14 @@ export default function WalletConnectSessionProvider(props) {
 
     // update session when provider changes
     useEffect(() => {
-
-        // subscribe to events that the connector emits
-        if (connector) {
+        if (provider && provider.connector.connected) { 
+            provider.enable() 
+            setIsConnected(true)
+        }
+        if (provider) {
 
             // Subscribe to connection events
-            connector.on("connect", (error, payload) => {
+            provider.connector.on("connect", (error, payload) => {
                 if (error) {
                     throw error;
                 }
@@ -76,32 +78,29 @@ export default function WalletConnectSessionProvider(props) {
             });
 
             // Subscribe to accounts change
-            connector.on("session_update", (error, payload) => {
-                if (error) {
-                    throw error;
-                }
-
-                // Get updated accounts and chainId
-                const { accounts, chainId } = payload.params[0];
-                console.log(connector)
+            provider.on("accountsChanged", (accounts) => {
                 setAccounts(accounts)
+            });
+
+            // Subscribe to chainId change
+            provider.on("chainChanged", (chainId) => {
                 setChainId(chainId)
             });
 
             // Subscribe to session disconnection
-            connector.on("disconnect", (error, payload) => {
+            provider.on("disconnect", (error, payload) => {
                 if (error) {
                     throw error;
                 }
 
                 // reset state
-                setConnector(undefined)
+                setProvider(undefined)
                 setAccounts(undefined)
                 setChainId(undefined)
                 setIsConnected(false)
             });
         }
-    }, [connector])
+    }, [provider])
 
     async function connectWalletAndUpdateStatus() {
 
@@ -109,8 +108,8 @@ export default function WalletConnectSessionProvider(props) {
         if (isConnected) { return }
 
         setIsLoaded(false)
-        const newConnector = await initWalletConnect() // we need to re-init the connector for the modal to show for a second time
-        await newConnector.createSession();
+        const newProvider = await initWalletConnect() // we need to re-init the provider for the modal to show for a second time
+        await newProvider.enable();
         //await connector.connect()
         setIsLoaded(true)
     }
@@ -122,7 +121,7 @@ export default function WalletConnectSessionProvider(props) {
 
         setIsLoaded(false)
         //const newConnector = await initWalletConnect() // we need to re-init the connector for the modal to show for a second time
-        await connector.killSession()
+        await provider.connector.killSession()
         setIsLoaded(true)
     }
 
@@ -132,7 +131,7 @@ export default function WalletConnectSessionProvider(props) {
             disconnect: disconnectWalletAndUpdateStatus,
             accounts: accounts,
             chainId: chainId,
-            connector: connector,
+            provider: provider,
             isLoaded: isLoaded,
             isConnected: isConnected
         }}>
