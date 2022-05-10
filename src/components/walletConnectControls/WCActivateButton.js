@@ -20,7 +20,7 @@ export default function WCActivateButton() {
                     }
             }
         >
-            <p className='max-w-[10rem] text-ellipsis overflow-hidden' >
+            <p className='sm:max-w-[10rem] text-ellipsis overflow-hidden' >
                 {
                     walletConnectSession.accounts ?
                         walletConnectSession.accounts[0]
