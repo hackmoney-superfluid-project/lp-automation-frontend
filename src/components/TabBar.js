@@ -30,7 +30,7 @@ function TabButton({ text, paramName, buttonColor }) {
     return (
         <Link
             to={`/${paramName}`}
-            className={(path == paramName ? ' bg-gray-500/20 ' : ' bg-transparent ') + 'h-full rounded-xl px-4 font-bold flex grow justify-center items-center transition-all duration-500'}
+            className={(path == paramName ? ' bg-gray-200/20 ' : ' bg-transparent ') + 'h-full rounded-xl px-4 font-bold flex grow justify-center items-center transition-all duration-500'}
         >
             {text}
         </Link>

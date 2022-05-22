@@ -29,7 +29,7 @@ export default function AddressEntryField({ address, setAddress, title }) {
                     'outlineColor': '#c4322d'
                 } : {}}
                 //className='h-20 text-2xl font-semibold bg-gray-600/20 rounded-2xl px-4 numbers-font-2'
-                className='h-20 text-2xl w-full pt-6 font-semibold bg-gray-600/20 rounded-2xl px-4 numbers-font-2'
+                className='h-20 text-2xl w-full pt-6 font-semibold bg-white/5 rounded-2xl px-4 numbers-font-2'
                 type="text"
                 placeholder="ex: 0xabc123..."
                 value={address}

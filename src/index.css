@@ -11,6 +11,10 @@
     background: radial-gradient(80% 80% at top, #253027, #212429);
   }
 
+  .radial-gradient2 {
+    background: radial-gradient(80% 80% at top, #058ED9, #0242CC);
+  }
+
   .numbers-font {
     font-family: 'Orbitron', sans-serif;
   }

@@ -26,10 +26,8 @@ export default function WalletConnectSessionWeb3Provider(props) {
     async function initWalletConnect() {
 
         const newProvider = new WalletConnectProvider({
-            //infuraId: "627d53e500bf4f58839c5fd0588df224",
-            rpc: {
-                80001: 'https://rpc-mumbai.maticvigil.com'
-            }
+            infuraId: "627d53e500bf4f58839c5fd0588df224",
+            
         })
 
         setProvider(newProvider)

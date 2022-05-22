@@ -28,7 +28,7 @@ export default function NumberEntryField({ number, setNumber, title }) {
                     'outlineStyle': 'solid',
                     'outlineColor': '#c4322d'
                 } : {}}
-                className='h-20 text-2xl w-full pt-6 font-semibold bg-gray-600/20 rounded-2xl px-4 numbers-font-2'
+                className='h-20 text-2xl w-full pt-6 font-semibold bg-white/5 rounded-2xl px-4 numbers-font-2'
                 type="text"
                 pattern="^[0-9]*[.,]?[0-9]*$"
                 placeholder="0.0"
